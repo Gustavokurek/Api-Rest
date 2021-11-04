@@ -1,8 +1,17 @@
+import Aluno from '../models/Aluno';
+
 class HomeController {
-  index(req, res) {
-    res.json({
-      'hakuna  matata': 'rei leão',
+  async index(req, res) {
+    const novoAluno = await Aluno.create({
+      nome: 'gustavo',
+      sobrenome: 'Kurek',
+      email: 'gustavokureksz@gmail.com',
+      idade: 22,
+      peso: 80,
+      altura: 1.80,
+
     });
+    res.json(novoAluno);
   }
 }
 
