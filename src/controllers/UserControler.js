@@ -14,6 +14,9 @@ class UserController {
   // index
   async index(req, res) {
     try {
+      console.log(req.userDados);
+      console.log(req.userId);
+      console.log(req.userEmail);
       const users = await User.findAll();
       return res.json(users);
     } catch (e) {
@@ -26,6 +29,7 @@ class UserController {
     try {
       const { id } = req.params;
       const user = await User.findByPk(id);
+      if (!user) return res.status(400).json({ errors: ['usuário nao existe'] });
       return res.json(user);
     } catch (e) {
       return res.status(400).json({ errors: e.errors.map((err) => err.message) });
