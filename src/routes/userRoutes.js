@@ -9,7 +9,7 @@ router.get('/', userControler.index);
 router.get('/:id', userControler.show);
 
 //
-router.post('/', userControler.store);
+router.post('/', loginRequired, userControler.store);
 router.put('/', loginRequired, userControler.update);
 router.delete('/', loginRequired, userControler.delete);
 
