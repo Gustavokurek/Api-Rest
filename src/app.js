@@ -3,6 +3,8 @@ import { resolve } from 'path';
 
 Dotenv.config();
 import './database';
+import cors from 'cors';
+import helmet from 'helmet';
 
 import express from 'express';
 import homeRoutes from './routes/homeRoutes';
@@ -25,6 +27,8 @@ class App {
   }
 
   routes() {
+    this.app.use(cors());
+    this.app.use(helmet());
     this.app.use('/', homeRoutes);
     this.app.use('/users', userRoutes);
     this.app.use('/tokens', TokenRoutes);
