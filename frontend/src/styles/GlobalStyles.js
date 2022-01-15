@@ -27,7 +27,14 @@ export default createGlobalStyle`
     color: #fff;
     padding: 10px 20px;
     border-radius: 4px;
+    height: 40px;
     font-weight: 700;
+
+    &:hover{
+      background-color: #eee;
+      color: ${colors.primaryColor};
+      border: 2px solid ${colors.primaryColor}
+    }
   }
 
   a {

@@ -8,6 +8,10 @@ import axios from '../../services/axios';
 import { AlunoContainer, ProfilePicture } from './styled';
 
 export default function Alunos() {
+  // useEffect
+  // useState
+  // get lodash
+  // manipulação de componentes
   const [alunos, setAlunos] = useState([]);
   useEffect(() => {
     async function getData() {
