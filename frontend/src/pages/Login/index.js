@@ -3,12 +3,15 @@ import { toast } from 'react-toastify';
 import { isEmail } from 'validator';
 import { useDispatch } from 'react-redux';
 
+import { get } from 'lodash';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 import * as actions from '../../store/modules/Auth/actions';
 
-export default function Login() {
+export default function Login(props) {
   const dispatch = useDispatch();
+  // pegando rota anterior que tava sem acesso, para redirecionar quando tiver feito login
+  const prevPath = get(props, 'location.state.prevPath', '/');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleSubmit = (e) => {
@@ -25,7 +28,8 @@ export default function Login() {
     }
 
     if (formError) return;
-    dispatch(actions.loginRequest({ email, password }));
+    // disponibilizando o pagina no payload
+    dispatch(actions.loginRequest({ email, password, prevPath }));
   };
 
   return (

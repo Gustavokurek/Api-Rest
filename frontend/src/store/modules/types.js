@@ -5,3 +5,6 @@ export const BOTAO_CLICADO_FAILURE = 'BOTAO_CLICADO_FAILURE';
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+
+// type do redux persist da ação de de manter o authorization no cabeçalho
+export const PERSIST_REHYDRATE = 'persist/REHYDRATE';

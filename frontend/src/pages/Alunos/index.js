@@ -19,7 +19,8 @@ export default function Alunos() {
       setAlunos(response.data);
     }
     getData();
-  });
+  }, []);
+  // tava fazendo requisição em loop
   return (
     <Container>
       <h1>Alunos</h1>
