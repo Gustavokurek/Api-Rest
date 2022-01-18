@@ -2,18 +2,30 @@ import React, { useState } from 'react';
 
 import { toast } from 'react-toastify';
 import { isEmail } from 'validator';
-import { get } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
-import axios from '../../services/axios';
-import history from '../../services/history';
 import Loading from '../../components/Loading';
+import * as actions from '../../store/modules/Auth/actions';
 
 export default function Register() {
+  const dispatch = useDispatch();
+
+  // pegando dadps do usuário logado
+  const { id } = useSelector((state) => state.Auth.user);
+  const { nome: nomeStored } = useSelector((state) => state.Auth.user);
+  const { email: emailStored } = useSelector((state) => state.Auth.user);
+  const { isLoading } = useSelector((state) => state.Auth.user);
+
   const [nome, setNome] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
+  // colocando dados do usuário logado no formulário de edit
+  React.useEffect(() => {
+    if (!id) return;
+    setNome(nomeStored);
+    setEmail(emailStored);
+  }, [id, nomeStored, emailStored]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,7 +35,7 @@ export default function Register() {
       formError = true;
       toast.error('nome precisa ter entre 3 e 255 caracteres');
     }
-    if (password.length < 3 || password.length > 50) {
+    if ((!id && password.length < 3) || password.length > 50) {
       formError = true;
       toast.error('Password precisa ter entre 3 e 50 caracteres');
     }
@@ -33,31 +45,14 @@ export default function Register() {
     }
 
     if (formError) return;
-    setLoading(true);
-
-    try {
-      await axios.post('/users', {
-        nome,
-        email,
-        password,
-      });
-
-      toast.success('Você se cadastrou com sucesso');
-      setLoading(false);
-      // mudar state antes de redirecionar
-      history.push('/login');
-    } catch (err) {
-      const errors = get(err, 'response.data.errors', []);
-
-      errors.map((error) => toast.error(error));
-    }
-    setLoading(false);
+    // chamando actions para acionar a saga de register e edit
+    dispatch(actions.registerRequest({ nome, email, password, id }));
   }
   return (
+    // usando condições verificando se há um id para mudar o formulário de register para editar
     <Container>
-      <Loading isLoading={loading} />
-
-      <h1>Register</h1>
+      <Loading isLoading={isLoading} Msg="Carregando..." />
+      <h1>{!id ? 'Register' : 'Editar Dados'}</h1>
 
       <Form onSubmit={handleSubmit}>
         <label htmlFor="nome">
@@ -88,7 +83,7 @@ export default function Register() {
           />
         </label>
 
-        <button type="submit"> Register </button>
+        <button type="submit"> {!id ? 'Register' : 'Salvar Dados'} </button>
       </Form>
     </Container>
   );
