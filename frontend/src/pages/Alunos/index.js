@@ -7,22 +7,28 @@ import { Container } from '../../styles/GlobalStyles';
 import axios from '../../services/axios';
 import { AlunoContainer, ProfilePicture } from './styled';
 
+import Loading from '../../components/Loading';
+
 export default function Alunos() {
   // useEffect
   // useState
   // get lodash
   // manipulação de componentes
   const [alunos, setAlunos] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     async function getData() {
+      setLoading(true);
       const response = await axios.get('/Alunos');
       setAlunos(response.data);
+      setLoading(false);
     }
     getData();
   }, []);
   // tava fazendo requisição em loop
   return (
     <Container>
+      <Loading isLoading={loading} Msg="Carregando..." />
       <h1>Alunos</h1>
       <AlunoContainer>
         {alunos.map((aluno) => (

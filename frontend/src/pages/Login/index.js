@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { isEmail } from 'validator';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { get } from 'lodash';
 import { Container } from '../../styles/GlobalStyles';
 import { Form } from './styled';
 import * as actions from '../../store/modules/Auth/actions';
+import Loading from '../../components/Loading';
 
 export default function Login(props) {
   const dispatch = useDispatch();
   // pegando rota anterior que tava sem acesso, para redirecionar quando tiver feito login
   const prevPath = get(props, 'location.state.prevPath', '/');
+  // use selector para pegar dado do state global do reducer
+  const loading = useSelector((state) => state.Auth.isLoading);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleSubmit = (e) => {
@@ -34,6 +37,8 @@ export default function Login(props) {
 
   return (
     <Container>
+      <Loading isLoading={loading} Msg="Entrando" />
+
       <Form onSubmit={handleSubmit}>
         <label htmlFor="Email">
           Email:
