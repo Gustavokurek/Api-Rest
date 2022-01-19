@@ -15,7 +15,7 @@ function* loginRequest({ payload }) {
     toast.success('Logado');
 
     // colocando token no cabeçalho de authorization para liberar acesso as paginas fechadas quando login for feito
-    axios.defaults.headers.Authorizations = `Bearer ${response.data.token}`;
+    axios.defaults.headers.Authorization = `Bearer ${response.data.token}`;
     // depois do login feito redirecionando para a ultima pagina acessada que não tinha acesso pq não tava logado
     history.push(payload.prevPath);
   } catch (e) {
@@ -30,12 +30,46 @@ function persistRehydrate({ payload }) {
   // payload aqui são os dados do state global
   const token = get(payload, 'Auth.token', '');
   if (!token) return;
-  axios.defaults.headers.Authorizations = `Bearer ${token}`;
+  axios.defaults.headers.Authorization = `Bearer ${token}`;
 }
 
-function registerRequest({ payload }) {
-  const { id, nome, email, password } = payload;
-  // continua daqui
+function* registerRequest({ payload }) {
+  try {
+    const { id, nome, email, password } = payload;
+    if (id) {
+      yield call(axios.put, '/users', {
+        email,
+        nome,
+        password: password || undefined,
+      });
+      yield put(actions.registerUpdatedSuccess({ nome, email, password }));
+      toast.success('Dados alterados com sucesso ');
+    } else {
+      yield call(axios.post, '/users', {
+        email,
+        nome,
+        password,
+      });
+      toast.success('Conta criada com sucesso ');
+      yield put(actions.registerCreatedSuccess());
+      history.push('/login');
+    }
+  } catch (e) {
+    const errors = get(e, 'response.data.errors', []);
+    const status = get(e, 'response.status', []);
+    if (status === 401) {
+      toast.error('Você precisa logar novamente');
+      yield put(actions.LoginFailure());
+      return history.push('/login');
+    }
+    if (errors.length > 0) {
+      errors.map((error) => toast.error(error));
+    } else {
+      toast.error('erro desconhecido');
+    }
+    yield put(actions.registerFailure());
+  }
+  return 1;
 }
 
 export default all([

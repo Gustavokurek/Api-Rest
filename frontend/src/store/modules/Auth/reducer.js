@@ -29,6 +29,32 @@ export default function (state = initialState, action) {
       const newState = { ...initialState };
       return newState;
     }
+    case types.REGISTER_UPDATED_SUCCESS: {
+      // mudando as configurações de estado quando o login é feito
+      const newState = { ...state };
+      newState.user.nome = action.payload.nome;
+      newState.user.email = action.payload.email;
+      newState.isLoading = false;
+
+      return newState;
+    }
+    case types.REGISTER_CREATED_SUCCESS: {
+      // mudando as configurações de estado quando o login é feito
+      const newState = { ...state };
+      newState.isLoading = false;
+
+      return newState;
+    }
+    case types.REGISTER_REQUEST: {
+      const newState = { ...state };
+      newState.isLoading = true;
+      return newState;
+    }
+    case types.REGISTER_FAILURE: {
+      const newState = { ...state };
+      newState.isLoading = false;
+      return newState;
+    }
 
     default: {
       return state;

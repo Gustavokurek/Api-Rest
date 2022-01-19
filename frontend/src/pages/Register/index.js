@@ -12,10 +12,10 @@ export default function Register() {
   const dispatch = useDispatch();
 
   // pegando dadps do usuário logado
-  const { id } = useSelector((state) => state.Auth.user);
+  const id = useSelector((state) => state.Auth.user.id);
   const { nome: nomeStored } = useSelector((state) => state.Auth.user);
   const { email: emailStored } = useSelector((state) => state.Auth.user);
-  const { isLoading } = useSelector((state) => state.Auth.user);
+  const { isLoading } = useSelector((state) => state.Auth);
 
   const [nome, setNome] = useState('');
   const [password, setPassword] = useState('');
@@ -35,9 +35,9 @@ export default function Register() {
       formError = true;
       toast.error('nome precisa ter entre 3 e 255 caracteres');
     }
-    if ((!id && password.length < 3) || password.length > 50) {
+    if ((!id && password.length < 6) || password.length > 50) {
       formError = true;
-      toast.error('Password precisa ter entre 3 e 50 caracteres');
+      toast.error('Password precisa ter entre 6 e 50 caracteres');
     }
     if (!isEmail(email)) {
       formError = true;
